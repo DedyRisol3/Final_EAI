@@ -1,0 +1,93 @@
+<x-app-layout>
+    <x-slot name="title">
+        Tambah Produk Baru - Admin Panel
+    </x-slot>
+
+    <x-slot name="styles">
+        {{-- Style tambahan jika perlu --}}
+        <style>
+            .form-group { margin-bottom: 1.5rem; }
+            .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+            /* Style input/textarea/select pakai class Tailwind dari Breeze */
+             .btn-primary { background-color: var(--primary-color); color: var(--white-color); }
+            .btn-primary:hover { background-color: #006a6a; }
+            .btn-secondary { background-color: #6c757d; color: white; } /* Tombol abu-abu */
+            .btn-secondary:hover { background-color: #5a6268; }
+            /* Kelas untuk pesan error validasi */
+            .text-red-500 { color: #ef4444; }
+            .text-sm { font-size: 0.875rem; }
+        </style>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="container">
+            <h1 class="text-3xl font-semibold mb-6">Tambah Produk Baru</h1>
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    {{-- Form mengarah ke route admin.produk.store dengan method POST --}}
+                    <form action="{{ route('admin.produk.store') }}" method="POST">
+                        @csrf {{-- Token Keamanan Laravel --}}
+
+                        {{-- Nama Produk --}}
+                        <div class="form-group">
+                            <label for="name">Nama Produk <span class="text-red-500">*</span></label>
+                            <input type="text" id="name" name="name"
+                                   class="border-gray-300 rounded-md shadow-sm w-full"
+                                   value="{{ old('name') }}" required>
+                            @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        </div>
+
+                        {{-- Kategori --}}
+                        <div class="form-group">
+                            <label for="category">Kategori <span class="text-red-500">*</span></label>
+                            {{-- Sebaiknya kategori diambil dari database, tapi sementara hardcode --}}
+                            <select id="category" name="category" class="border-gray-300 rounded-md shadow-sm w-full" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                <option value="kemeja" @selected(old('category') == 'kemeja')>Kemeja</option>
+                                <option value="gaun" @selected(old('category') == 'gaun')>Gaun & Kebaya</option>
+                                <option value="kaos" @selected(old('category') == 'kaos')>Kaos & Sablon</option>
+                                <option value="seragam" @selected(old('category') == 'seragam')>Seragam</option>
+                                <option value="batik" @selected(old('category') == 'batik')>Batik</option>
+                                <option value="permak" @selected(old('category') == 'permak')>Permak</option>
+                            </select>
+                            @error('category') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        </div>
+
+                        {{-- Harga --}}
+                        <div class="form-group">
+                            <label for="price">Harga (Rp) <span class="text-red-500">*</span></label>
+                            <input type="number" id="price" name="price" step="1000" min="0"
+                                   class="border-gray-300 rounded-md shadow-sm w-full"
+                                   value="{{ old('price') }}" required placeholder="Contoh: 250000 (tanpa titik)">
+                            @error('price') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        </div>
+
+                        {{-- Deskripsi --}}
+                        <div class="form-group">
+                            <label for="description">Deskripsi</label>
+                            <textarea id="description" name="description" rows="4"
+                                      class="border-gray-300 rounded-md shadow-sm w-full">{{ old('description') }}</textarea>
+                            @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        </div>
+
+                         {{-- URL Gambar --}}
+                        <div class="form-group">
+                            <label for="image_url">URL Gambar</label>
+                            <input type="url" id="image_url" name="image_url"
+                                   class="border-gray-300 rounded-md shadow-sm w-full"
+                                   value="{{ old('image_url') }}" placeholder="Contoh: https://...">
+                            @error('image_url') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        </div>
+
+                        {{-- Tombol Aksi --}}
+                        <div class="mt-6 flex items-center gap-4">
+                            <button type="submit" class="btn btn-primary">Simpan Produk</button>
+                            <a href="{{ route('admin.produk.index') }}" class="btn btn-secondary">Batal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
